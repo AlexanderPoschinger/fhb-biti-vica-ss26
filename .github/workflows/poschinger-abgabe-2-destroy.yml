@@ -1,0 +1,33 @@
+name: Poschinger Abgabe 2 - Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Poschinger_Alexander/Abgabe_2_260607
+
+    steps:
+      # Holt den aktuellen Repository-Code in den GitHub Runner.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Installiert OpenTofu auf dem GitHub Runner.
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      # Initialisiert OpenTofu und lädt den Exoscale Provider.
+      - name: Init OpenTofu
+        run: tofu init
+
+      # Löscht die durch OpenTofu verwaltete Exoscale Infrastruktur.
+      - name: Destroy infrastructure
+        run: tofu destroy -auto-approve
+        env:
+          EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
+          EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
