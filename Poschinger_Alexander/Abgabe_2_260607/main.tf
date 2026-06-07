@@ -1,4 +1,17 @@
 terraform {
+  # Remote State, damit Create- und Destroy-Workflow denselben State verwenden.
+  backend "s3" {
+    bucket                      = "aposchinger-abgabe2-state"
+    key                         = "abgabe-2/tofu.tfstate"
+    region                      = "at-vie-1"
+    endpoints                   = { s3 = "https://sos-at-vie-1.exo.io" }
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    use_path_style              = true
+  }
+
   required_providers {
     exoscale = {
       source  = "exoscale/exoscale"
